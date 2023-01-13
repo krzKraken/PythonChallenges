@@ -6,8 +6,17 @@
 
 
 def main():
-    for i in range(50):
-        print(i)
+    fibonnaci = []
+    for i in range(0, 10):
+        if i == 0:
+            fibonnaci.append(0)
+        if i == 1:
+            fibonnaci.append(1)
+        if i > 1:
+            val = fibonnaci[i - 1] + fibonnaci[i - 2]
+            fibonnaci.append(val)
+
+    print(fibonnaci)
 
 
 if __name__ == "__main__":

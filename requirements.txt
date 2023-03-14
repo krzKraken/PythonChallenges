@@ -1,0 +1,9 @@
+#pip freeze (List of requirements)
+#pip install -r requirements.txt (Install)
+certifi==2022.12.7
+distlib==0.3.6
+filelock==3.9.1
+pipenv==2023.2.18
+platformdirs==3.1.1
+virtualenv==20.21.0
+virtualenv-clone==0.5.7

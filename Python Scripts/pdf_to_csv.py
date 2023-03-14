@@ -1,7 +1,9 @@
 import re
 import argparse
-import pdfreader as PyPDF2
+from pdfreader import PDFDocument, SimplePDFViewer
 
+
+# Search Patron
 ruc = "<ruc>"
 razon_social = "<razonSocial>"
 descripcion_del_gasto = "Descripcion del gasto"
@@ -24,25 +26,17 @@ fecha_autorizacion = "<fechaAutorizacion>"
 
 
 def read_pdf():
-    # Abrir el archivo PDF en modo de lectura binaria
-    with open('Factura.pdf', 'rb') as archivo_pdf:
+    # Reading pdf
+    file = open("Factura.pdf", "rb")
+    viewer = SimplePDFViewer(file)
+    viewer.render()
+    print(viewer.metadata)
+    for canvas in viewer:
+        page_text = canvas.text_content
 
-        # Crear un objeto PDFReader de PyPDF2
-        lector_pdf = PyPDF2.PdfFileReader(archivo_pdf)
+        page_string = canvas.strings
 
-        # Obtener el número de páginas en el archivo PDF
-        num_paginas = lector_pdf.getNumPages()
-
-        # Leer cada página del archivo PDF
-        for numero_pagina in range(num_paginas):
-            # Obtener la página del PDF
-            pagina = lector_pdf.getPage(numero_pagina)
-
-            # Extraer el texto de la página del PDF
-            texto_pagina = pagina.extractText()
-
-            # Imprimir el texto de la página
-            print(texto_pagina)
+        print(page_string)
 
 
 def main():
@@ -75,17 +69,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-// como leer pdf con pdfreader en python?
-# PyPDF4 includes a modest (but growing!) test suite built on the unittest
-# framework. All tests are located in the tests/ folder and are distributed
-# among dedicated modules. Tox makes running all tests over all versions of Python
-# quick work:
-python - m pip install tox
-python - m tox
-
-
-# Individual tests are accessible as conventional Pytest sources;
-pytest - v tests/test_pdf.py
-
-
-# Source: https://github.com/claird/PyPDF4

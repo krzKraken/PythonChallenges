@@ -133,4 +133,38 @@ print("Imprimir tablas filtradas")
 print(df_students[df_students.StudyHours > mean_study])
 
 print("Operando sobre dataFrame obtenido ")
-print(df_students[df_students.StudyHours > mean_study][1, 2])
+mean_grade = df_students[df_students.StudyHours > mean_study].Grade.mean()
+print("Promedio de notas de alumnos con horas de estudio mayor a promedio: ",
+      mean_grade)
+
+df = df_students[df_students.StudyHours > mean_study]
+print(df)
+print("___filtrando por columnas___ loc(:,['Columna1', 'columna2'])")
+print(df.loc[:, ['Name', 'Grade']])
+
+print("_____Filtrando por columnas___ iloc(:,[0,2]))")
+print(df.iloc[:, [0, 2]])
+
+# Filtrando con el metodo concat
+print(
+    "______Concatenar una Lista de los estudiantes que tienen notas mayores a 60____"
+)
+passes = pd.Series(df_students['Grade'] >= 60)
+pass_students = pd.concat([df_students, passes.rename("Pass")], axis=1)
+las = pass_students[pass_students.Pass == True]
+print(las)
+
+# Grupos
+print("________Groups Para contar por Pasados______")
+print(pass_students.groupby(pass_students.Pass).Name.count())
+print(pass_students.groupby(pass_students.Grade > 60).Name.count())
+
+# Grups multiple fields
+df_students = pd.read_csv('grades.csv', delimiter=",", header='infer')
+passes = pd.Series(df_students['Grade'] >= 60)
+df_students = pd.concat([df_students, passes.rename("Pass")], axis=1)
+print("________Groups y columnas______")
+print(df_students.groupby(df_students.Pass)['StudyHours'].mean())
+
+# Ordenando los valores
+print(pass_students.sort_values('Grade', ascending=False))

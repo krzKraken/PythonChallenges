@@ -74,6 +74,10 @@ graphing.scatter_2D(data,
                     "standardized_age_when_trained",
                     "mean_rescues_per_year",
                     trendline=model_norm.predict)
+from matplotlib import pyplot as plt
+
+plt.scatter(data, "standardized_age_when_trained", "mean_rescues_per_year")
+plt.show()
 '''
 
 It looks like this model fits the data much better that the first one!

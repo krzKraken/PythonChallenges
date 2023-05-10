@@ -4,6 +4,8 @@ from enum import Enum
 
 xml_list = []
 factura_list = []
+total_sin_impuestos=''
+total_iva_12=''
 # Class factura
 class Factura:
     
@@ -54,8 +56,9 @@ def list_xml_files():
 # read xml files with python
 def read_xml():
     # todo: for factura in lista de facturas 
-    with open("Factura.xml","r") as xml:
+    with open("/home/krzkraken/Desktop/PythonChallenges/Python Scripts/Factura.xml","r") as xml:
         my_factura = Factura()
+        
         for line in xml:
 
             #* Getting numero autorizacion
@@ -121,40 +124,46 @@ def read_xml():
                 if res is not None:
                     my_factura.descripcion_gasto = res.group(1)
                 else: 
-                    my_factura.descripcion_gasto = 'Descripcion de gasto'
+                    my_factura.descripcion_gasto = '--Descripcion de gasto--'
          
             #* Getting Total without taxes
             if str(line).__contains__(FacturaEnum.subtotal_12.value):
-                res = re.search(r"<baseImponible>(\d+\.\d+)</baseImponible>", str(line))
-                if res is not None:
-                    my_factura.subtotal_12 = res.group(1)
-                else:
-                    my_factura.subtotal_12 = '0'
+                res = re.search(r"<baseImponible>(\d+\.\d+)</baseImponible>", str(line))                
+                global total_sin_impuestos
 
+                if res is not None and total_sin_impuestos =='':
+                    my_factura.subtotal_12 = res.group(1)
+                    total_sin_impuestos=res.group(1)
+                else:
+                    my_factura.subtotal_12 = '--total sin impuestos--'
+                    
+            #* Getting tips
             if str(line).__contains__(FacturaEnum.propina.value):
                 res = re.search(r"<propina>(\d+\.\d+)</propina>", str(line))
                 if res is not None:
                     my_factura.propina = res.group(1)
                 else:
-                    my_factura.propina = '0'
+                    my_factura.propina = '--propina--'
+            
+            #* Getting base 0%
             if str(line).__contains__(FacturaEnum.base_0.value):
-                res = re.search(r"<>", str(line))
+                res = re.search(r"<codigoPorcentaje>0</codigoPorcentaje><baseImponible>(\d+\.\d+)</baseImponible>", str(line))
                 if res is not None:
                     my_factura.base_0 = res.group(1)
-                else:
-                    my_factura.base_0 = '0'
+            
+            #* Getting IVA 12%
             if str(line).__contains__(FacturaEnum.iva_12.value):
-                res = re.search(r"<valor> (\d+\.\d+)</valor>", str(line))
+                res = re.search(r"<valor>(\d+\.\d+)</valor>", str(line))
                 if res is not None:
                     my_factura.iva_12 = res.group(1)
                 else:
-                    my_factura.iva_12 = '0asdsadas'
+                    my_factura.iva_12 = '--iba 12%--'
             if str(line).__contains__(FacturaEnum.total.value):
                 res = re.search(r"<importeTotal>2(\d+\.\d+)</importeTotal>", str(line))
                 if res is not None:
                     my_factura.total = res.group(1)
                 else:
-                    my_factura.total = '0'
+                    my_factura.total = '--total--'
                 my_factura.total = str(line)
             if str(line).__contains__(FacturaEnum.tipo_documento.value):
                 #TODO: Get tipo documento
